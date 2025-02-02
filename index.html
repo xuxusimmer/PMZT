@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico com Google Sheets</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <canvas id="myChart"></canvas>
+
+    <script>
+        async function fetchData() {
+            const sheetURL = "https://docs.google.com/spreadsheets/d/{SUA_ID}/gviz/tq?tqx=out:json";
+            const response = await fetch(sheetURL);
+            const text = await response.text();
+            const json = JSON.parse(text.substring(47, text.length - 2)); // Remove cabeçalhos extras
+
+            let labels = [];
+            let images = [];
+            let data = [];
+
+            json.table.rows.forEach(row => {
+                labels.push(row.c[0].v);  // Nome
+                images.push(row.c[1].v);  // Foto (URL)
+                data.push(row.c[2].v);    // Valor numérico
+            });
+
+            renderChart(labels, images, data);
+        }
+
+        function renderChart(labels, images, data) {
+            const ctx = document.getElementById("myChart").getContext("2d");
+            new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Valores",
+                        data: data,
+                        backgroundColor: "rgba(75, 192, 192, 0.5)"
+                    }]
+                },
+                options: {
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (tooltipItem) {
+                                    return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                                },
+                                beforeBody: function (tooltipItem) {
+                                    let index = tooltipItem[0].dataIndex;
+                                    return `Foto: ${images[index]}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        fetchData();
+    </script>
+
+</body>
+</html>
