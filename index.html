@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gráfico com Google Sheets</title>
+    <title>Pontuação Mensal Zero Trust</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -12,7 +12,7 @@
 
     <script>
         async function fetchData() {
-            const sheetURL = "https://docs.google.com/spreadsheets/d/{SUA_ID}/gviz/tq?tqx=out:json";
+            const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTK-SDwo4hTJa38ykdxDZByw4le9RJ41_uZVxJTVx4wiS_rOkyHdbyIV5Hj1S_VWied1AqrHx_SiBYR/pub?output=csv";
             const response = await fetch(sheetURL);
             const text = await response.text();
             const json = JSON.parse(text.substring(47, text.length - 2)); // Remove cabeçalhos extras
